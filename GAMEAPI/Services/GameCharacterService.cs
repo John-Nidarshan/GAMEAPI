@@ -1,8 +1,11 @@
-﻿using GAMEAPI.Models;
+﻿using GAMEAPI.Data;
+using GAMEAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GAMEAPI.Services;
 
-public class GameCharacterService : IGameCharacterService
+public class GameCharacterService(AppDbContext context
+    ) : IGameCharacterService
 {
     public Task<Character> AddCharacterAsync(Character character)
     {
@@ -10,9 +13,7 @@ public class GameCharacterService : IGameCharacterService
     }
 
     public Task<List<Character>> GetAllCharactersAsync()
-    {
-        throw new NotImplementedException();
-    }
+        => context.Characters.ToListAsync();
 
     public Task<List<Character>> GetCharacterByIdAsync(int id)
     {
