@@ -1,15 +1,15 @@
 ﻿using GAMEAPI.Dtos;
-using GAMEAPI.Models;
 
 namespace GAMEAPI.Services;
 
-    public interface IGameCharacterService
-    {
+public interface IGameCharacterService
+{
     Task<CharacterResponse?> GetCharacterByIdAsync(int id);
     Task<List<CharacterResponse>> GetAllCharactersAsync();
 
-    Task<Character> AddCharacterAsync(Character character);
-    Task<Character> RemoveCharacterAsync();
+    Task<CharacterResponse> AddCharacterAsync(CreateCharacterResponse character);
+    Task<bool> UpdateCharacterAsync(int id, UpdateCharacterRequest charater);
+    Task<bool> RemoveCharacterAsync(int id);
 
-    }
+}
 
