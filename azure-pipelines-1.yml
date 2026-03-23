@@ -1,0 +1,67 @@
+trigger:
+- main   # or your default branch
+
+pool:
+  name: 'SelfHostedPool'
+
+#variables
+variables:
+  buildConfiguration: 'Release'
+  azureSubscription: 'ASP-johnTestGroup-b5cb'  # change below
+  azureWebAppName: 'game-api-john'
+  publishDir: '$(Build.ArtifactStagingDirectory)'
+
+stages:
+# -----------------
+# 1. Build stage
+# -----------------
+- stage: Build
+  displayName: 'Build and Publish API'
+  jobs:
+  - job: Build
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '10.0.x'
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore'
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+    - task: DotNetCoreCLI@2
+      displayName: 'Build'
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish'
+      inputs:
+        command: 'publish'
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration) --output $(publishDir)'
+        zipAfterPublish: true
+    - publish: '$(publishDir)'
+      artifact: 'drop'
+# -----------------
+# 2. Deploy stage
+# -----------------
+- stage: Deploy
+  displayName: 'Deploy to Azure App Service'
+  dependsOn: Build
+  jobs:
+  - deployment: DeployWeb
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+          - task: AzureWebApp@1
+            displayName: 'Deploy Web API to Azure'
+            inputs:
+              azureSubscription: '$(azureSubscription)'
+              appName: '$(azureWebAppName)'
+              package: '$(Pipeline.Workspace)/drop/**/*.zip'
