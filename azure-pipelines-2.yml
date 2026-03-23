@@ -6,7 +6,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  azureSubscription: 'Azure subscription 1'  # change below
+  azureSubscription: 'azureconnection'  # change below
   azureWebAppName: 'game-api-john98'
   publishDir: '$(Build.ArtifactStagingDirectory)'
 
