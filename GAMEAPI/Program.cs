@@ -8,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IGameCharacterService, GameCharacterService>();
@@ -24,6 +28,14 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    // Optional: custom UI endpoint
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Game API v1");
+});
+
 
 app.UseHttpsRedirection();
 
