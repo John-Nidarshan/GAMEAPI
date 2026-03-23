@@ -2,7 +2,7 @@ trigger:
 - main   # or your default branch
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'SelfHostedPool'
 
 steps:
 - task: UseDotNet@2
