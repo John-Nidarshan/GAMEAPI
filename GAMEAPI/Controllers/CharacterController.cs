@@ -3,6 +3,7 @@ using GAMEAPI.Models;
 using GAMEAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace GAMEAPI.Controllers
 {
@@ -42,6 +43,23 @@ namespace GAMEAPI.Controllers
             var deleted = await service.RemoveCharacterAsync(id);
             return deleted ? NoContent() : NotFound("Character with the givern Id was not found");
         }
+
+        [HttpGet("db-test")]
+        public async Task<IActionResult> DbTest()
+        {
+            try
+            {
+                using var conn = new SqlConnection(
+                    Environment.GetEnvironmentVariable("DefaultConnection"));
+                await conn.OpenAsync();
+                return Ok("✅ Connected to Azure SQL");
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
     }
 }
  
