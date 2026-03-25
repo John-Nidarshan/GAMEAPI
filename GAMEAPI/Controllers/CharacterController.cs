@@ -20,7 +20,7 @@ namespace GAMEAPI.Controllers
         public async Task<ActionResult<CharacterResponse>> GetCharacter(int id)
         {
             var character = await service.GetCharacterByIdAsync(id);
-            return character is null ? NotFound("Charater with given ID was not not found") : Ok(character);
+            return character is null ? NotFound("Charater with given ID was not not foundd") : Ok(character);
         }
 
         [HttpPost]
